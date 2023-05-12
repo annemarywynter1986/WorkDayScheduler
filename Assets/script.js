@@ -1,54 +1,117 @@
-var textValue=document.querySelector('#text-area');
-var currentDay = dayjs();
-$('#currentDay').text(currentDay.format('MMMM D, YYYY, hh:mm a'));
-$('#currentDay').css("color", "blue");
-var saveBtn = document.querySelectorAll(".saveBtn");
+// declare global variables
 
-   //create array of input elements
-   var hourInput = $('<text-area>');
-   //save timeblocks into single variables for each input into text area elements
-   var hour9Input = $('#hour-9 #textarea');
-   var hour10Input = $('#hour-10 #textarea');
-   var hour11Input = $('#hour-11 #textarea');
-   var hour12Input = $('#hour-12 #textarea');
-   var hour1Input = $('#hour-1 #textarea');
-   var hour2Input = $('#hour-2 #textarea');
-   var hour3Input = $('#hour-3 #textarea');
-   var hour4Input = $('#hour-4 #textarea');
-   var hour5Input = $('#hour-5 #textarea');
-   var hour6Input= $('#hour-6 #textarea');
-   var hour7Input = $('#hour-7 #textarea');
-   var timeBlock = $(".time-block");
- 
- 
- 
- 
-   var currentHour = dayjs().format('HH');
-   var startTime = $('#hour-9');
-   console.log(currentHour);
-   if (currentHour == 9) {
-     startTime.addClass('present');
-   } else if (currentHour > 9) {
-     startTime.removeClass('present');
-     startTime.removeClass('future');
-     startTime.addClass('past');
-   } else if (currentHour < 9) {
-     startTime.removeClass('past');
-     startTime.removeclass('present');
-    startTime.addClass('future');
-   }
- 
-   //set item into localstorage
-   // localStorage.setItem("hour9", hour9Val);
-   //make for loop to target save buttons
-   for (let i = 0; i < 9; i++) {
-     console.log(saveBtn[i])
-     saveBtn[i].addEventListener('click', function (event) {
-       var inputHour = hourInput[i].value;
-       event.preventDefault();
-       console.log(inputHour, hourInput[i])
-       //set item into localstorage (using template literals with tutor)
-       localStorage.setItem(`hour${i+9}`, inputHour);
-     })
+// Set the beginning hour to be 8AM
+var hourBeginning = moment().startOf('day').add(7,'h');
+// totalHours = 8AM to 6PM = 11 hours
+var totalHours = 11;
+// Get current hour
+var currentHour = moment().format('H');
+// initializes timeTableElement and currentState of present, future, and past;
+var timeTableElement;
+var currentState;
+
+function chekboxFunction(){
+  var checkbox=$('#checkboxId')
+  var text=localStorage.keyValue;
+  {
+    if (checkbox.checked != true)
+    {
+      alert("you need to complete this task today");
+    }
+  }
+
+  // chekboxFunction($(this).checked)?$(this).attr('value',1):$(this).attr('value',0);
+  // if (checkbox.checked ===true){
+  //   text.style.display("text-decoration: line-through")
+  // } else{
+  //   text.style.display("text-decoration: none")
+  // }
+  // chekboxFunction();
+}
+
+
+function displayToday() {
+    // today display
+    var today = moment().format("dddd, MMMM Do, HH:mm a");
+    $('#currentDay').text(today);
+}
+
+function fillTimeTable() {
+
+  for (var hour = 0; hour < totalHours; hour++) { 
+      var realHour = hour + 8;
+      // add one hour while iterating for loop
+      timeTableElement = hourBeginning.add(1,'h').format('HH:mm A');
+
+      // determine the currentState based on the conditions
+      if (currentHour == realHour) {
+          currentState = 'present';
+      } else if (currentHour < realHour) {
+          currentState = 'past';
+      } else {
+          currentState = 'future';
+      }
+
+        var appendBlock = 
+            `<div id="hour-${realHour}" class="row time-block ${currentState}">
+                <div class="col-md-1 hour">${timeTableElement}</div>
+                <textarea class="col-md-8 description ${realHour}"></textarea>
+                <input type="checkbox" id="checkboxId" class="myCheck col-md-2" onclick="chekboxFunction()">
+                <button class="btn saveBtn col-md-1">
+                    <i class="fas fa-save"></i>
+                </button>
+                
+            </div>`;
+
+        $(".container").append(appendBlock);
+        
+       
+      
+
+
+    loadSchedule();
+}
+
+}
+
+
+
+// function for save schedule in the local storage
+function saveSchedule() {
+
+    var keyName = $(this).parent().attr('id');
+    var keyValue = $(this).parent().children().eq(1).val();
+
+    localStorage.setItem(keyName, keyValue);
+}
+
+// functino to get back the data from the local storage and print it out in to the textarea attribute
+function loadSchedule() {
+
+    for (var hour = 0; hour < totalHours; hour++) {
+        var realHour = hour + 8;
+        var loadedSchedule = localStorage.getItem(`hour-${realHour}`);
+
+        $(`.${realHour}`).val(loadedSchedule);
+    }
    
-   }
+    
+    }
+
+
+
+// Function calls
+displayToday();
+fillTimeTable();
+
+$('.saveBtn').on('click', saveSchedule);
+
+// updating date and time every 1 minute
+setInterval(function() {
+    displayToday();
+}, 60000);
+
+// updating entire time table every 1 hr
+setInterval(function() {
+    fillTimeTable();
+}, 3.6e+6);
