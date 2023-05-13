@@ -11,15 +11,18 @@ var currentState;
 var checkboxes = Array.from(document.querySelectorAll('checkbox'));
 var checkbox= $('#checkboxId');
 
+$(function () {
+  $('textarea').sortable();
+});
 
-    $('#checkbox').click(function(){
-      if (this.checked===true) {
-        alert("did you comlete it?")
+  //   $('#checkbox').click(function(){
+  //     if (this.checked===true) {
+  //       alert("did you comlete it?")
 
-        // $('textarea').css( "text-decoration", "line-through");
-      }
+  //       // $('textarea').css( "text-decoration", "line-through");
+  //     }
 
-  })
+  // })
 
 
 
@@ -34,14 +37,14 @@ $(".time-section").each(function (){
   var timeSection=$(this).attr("id").split("-")[1];
   if (currentHour===timeSection){
     $(this).addClass("present");
-    $(this).children(".desctiption").addClass("white-text");
+    // $(this).children(".desctiption").addClass("white-text");
   }else if(currentHour>timeSection){
-    $(this).addClass("future");
-    $(this).removeClass("present");
-    $(this).children("description").addClass("line-through-text");
-  }else if (currentHour<timeSection){
     $(this).addClass("past");
-    $(this).removeClass("future");
+    $(this).removeClass("present");
+    // $(this).children("description").addClass("line-through-text");
+  }else if (currentHour<timeSection){
+    $(this).addClass("future");
+    $(this).removeClass("past");
   }
 })
 
