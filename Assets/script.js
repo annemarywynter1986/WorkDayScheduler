@@ -36,7 +36,7 @@ $(".time-section").each(function () {
 })
 
 
-$(".saveBtn").click(function (event) {
+$(".save-btn").click(function (event) {
   event.preventDefault();
   var value = $(this).siblings(".time-block").val();
   var time = $(this).parent().attr("id").split("-")[1];
@@ -56,7 +56,7 @@ $("#hour-17 .time-block").val(localStorage.getItem("17"));
 
 
 
-$(".deleteBtn").click(function (event) {
+$(".delete-btn").click(function (event) {
   event.preventDefault();
   var value = $(this).siblings(".time-block").val('');
   var time = $(this).parent().attr("id").split("-")[1];
