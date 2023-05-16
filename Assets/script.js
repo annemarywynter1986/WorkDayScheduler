@@ -3,13 +3,7 @@ var hourBeginning = moment().startOf('day').add(7, 'h');
 var currentHour = moment().format('H');
 
 
-
-// $(function () {
-//   $('textarea').sortable();
-// });
-
-
-
+// this function is to set up curent date and time to be displaid on the application's header
 function displayToday() {
   // today display
   var today = moment().format("dddd, MMMM Do, HH:mm a");
@@ -19,23 +13,23 @@ function displayToday() {
 // Function calls
 displayToday();
 
+// this function compares each time table segment to current time and based on what time block it is  - sets the color of the row
 
 $(".time-section").each(function () {
   var timeSection = $(this).attr("id").split("-")[1];
   if (currentHour === timeSection) {
     $(this).addClass("present");
-    // $(this).children(".desctiption").addClass("white-text");
+    
   } else if (currentHour > timeSection) {
     $(this).addClass("past");
     $(this).removeClass("present");
-    // $(this).children("description").addClass("line-through-text");
   } else if (currentHour < timeSection) {
     $(this).addClass("future");
     $(this).removeClass("past");
   }
 })
 
-
+// this function enables Save buttons for each row and stores data in the localStorage
 $(".save-btn").click(function (event) {
   event.preventDefault();
   var value = $(this).siblings(".time-block").val();
@@ -55,6 +49,7 @@ $("#hour-16 .time-block").val(localStorage.getItem("16"));
 $("#hour-17 .time-block").val(localStorage.getItem("17"));
 
 
+// this function is for delete buttons located on each row accordingly, ot also clears local Storage
 
 $(".delete-btn").click(function (event) {
   event.preventDefault();
@@ -70,7 +65,7 @@ setInterval(function () {
   displayToday();
 }, 60000);
 
-
+// this function enables "clear all input fields" button in header to delete all in the planner instead of one by one 
 $('#clearFieldsBtn').click(function (event) {
   event.preventDefault();
   $('textarea').val('');
